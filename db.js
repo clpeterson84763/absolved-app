@@ -1,5 +1,6 @@
 import { DatabaseSync } from 'node:sqlite'
 import path from 'path'
+import fs from 'fs'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 
@@ -8,13 +9,18 @@ dotenv.config()
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // In production on Railway, use /data volume for persistence
 // In dev, use the project directory
-const dbFile = process.env.DATABASE_URL || (
+const resolvedPath = process.env.DATABASE_URL || (
   process.env.NODE_ENV === 'production'
     ? '/data/absolved.db'
     : path.join(__dirname, 'absolved.db')
 )
 
-const resolvedPath = dbFile
+// Ensure the directory exists before opening the database
+const dbDir = path.dirname(resolvedPath)
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true })
+}
+
 const db = new DatabaseSync(resolvedPath)
 
 // Enable WAL mode and foreign keys
