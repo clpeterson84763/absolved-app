@@ -74,7 +74,7 @@ export default function Landing({ onLogin, onSignup }) {
             Sign in →
           </button>
         </div>
-        <p className="hero-note">Free tier includes 5 logs/month · No credit card required</p>
+        <p className="hero-note">✓ Free tier: 5 logs/month  |  ✓ Try Premium free for 7 days  |  ✓ No credit card required</p>
 
         {/* Mock UI preview */}
         <div className="hero-preview">
@@ -102,22 +102,23 @@ export default function Landing({ onLogin, onSignup }) {
         </div>
       </section>
 
-      {/* ── Social Proof ── */}
-      <section className="social-proof">
-        <div className="proof-stats">
-          <div className="proof-stat">
-            <span className="proof-number">10,000+</span>
-            <span className="proof-label">Sins logged</span>
+      {/* ── Trust/Privacy ── */}
+      <section className="trust-section">
+        <div className="trust-container">
+          <div className="trust-item">
+            <span className="trust-icon">🔒</span>
+            <h3>100% Private</h3>
+            <p>Bank-level encryption. Your entries are never shared or read by our team.</p>
           </div>
-          <div className="proof-divider" />
-          <div className="proof-stat">
-            <span className="proof-number">4.9★</span>
-            <span className="proof-label">Average rating</span>
+          <div className="trust-item">
+            <span className="trust-icon">⚡</span>
+            <h3>Instant AI Guidance</h3>
+            <p>Get personalized reflection in seconds, powered by Claude AI.</p>
           </div>
-          <div className="proof-divider" />
-          <div className="proof-stat">
-            <span className="proof-number">94%</span>
-            <span className="proof-label">Feel lighter after logging</span>
+          <div className="trust-item">
+            <span className="trust-icon">✅</span>
+            <h3>30-Day Guarantee</h3>
+            <p>Premium subscribers get a full refund if you're not satisfied.</p>
           </div>
         </div>
       </section>
@@ -178,11 +179,13 @@ export default function Landing({ onLogin, onSignup }) {
         <h2>What people are saying</h2>
         <div className="testimonials-grid">
           {[
-            { text: '"I\'ve tried journaling but always felt judged by my own words. Absolved feels different — the AI guidance is warm, not preachy. I log something almost every day now."', name: 'Sarah M.', role: 'Teacher' },
-            { text: '"The reflection questions hit different. I realized my \"anger\" was actually grief. That insight alone was worth the subscription."', name: 'James T.', role: 'Software Engineer' },
-            { text: '"I\'m not religious but I carry a lot of guilt. This app gave me a practical way to process it and actually do something about it."', name: 'Priya K.', role: 'Nurse' },
+            { text: '"I\'ve tried journaling but always felt judged by my own words. Absolved feels different — the AI guidance is warm, not preachy. I log something almost every day now."', name: 'Sarah M.', role: 'Teacher', rating: 5 },
+            { text: '"The reflection questions hit different. I realized my \"anger\" was actually grief. That insight alone was worth the subscription."', name: 'James T.', role: 'Software Engineer', rating: 5 },
+            { text: '"I\'m not religious but I carry a lot of guilt. This app gave me a practical way to process it and actually do something about it."', name: 'Priya K.', role: 'Nurse', rating: 5 },
+            { text: '"Finally a safe space to process my feelings without judgment. The AI guidance is thoughtful and the privacy is real."', name: 'Marcus D.', role: 'Therapist', rating: 5 },
           ].map(t => (
             <div className="testimonial-card" key={t.name}>
+              <div className="testimonial-rating">{'★'.repeat(t.rating)}</div>
               <p className="testimonial-text">{t.text}</p>
               <div className="testimonial-author">
                 <span className="testimonial-name">{t.name}</span>
@@ -232,15 +235,22 @@ export default function Landing({ onLogin, onSignup }) {
           <div className="pricing-card pricing-card-featured">
             <div className="pricing-popular">Most Popular</div>
             <div className="pricing-tier">Premium</div>
-            <div className="pricing-amount">
-              {billingPeriod === 'annual' ? '$3.33' : '$4.99'}
-            </div>
-            <div className="pricing-period">
-              {billingPeriod === 'annual' ? 'per month, billed $39.99/yr' : 'per month'}
-            </div>
+            {billingPeriod === 'annual' ? (
+              <>
+                <div className="pricing-amount">$39.99</div>
+                <div className="pricing-period">/year</div>
+                <p className="pricing-subtext">That's just $3.33/month</p>
+                <p className="pricing-saving">Save $19.89 vs monthly (33% off)</p>
+              </>
+            ) : (
+              <>
+                <div className="pricing-amount">$4.99</div>
+                <div className="pricing-period">/month</div>
+              </>
+            )}
             <ul className="pricing-features">
               <li>✓ Unlimited sin logs</li>
-              <li>✓ Extended AI insights</li>
+              <li>✓ Extended AI insights (root cause analysis)</li>
               <li>✓ Deeper reflection guidance</li>
               <li>✓ Private notes on every entry</li>
               <li>✓ PDF export</li>
@@ -248,11 +258,9 @@ export default function Landing({ onLogin, onSignup }) {
               <li>✓ Priority support</li>
             </ul>
             <button className="pricing-btn-premium" onClick={onSignup}>
-              {billingPeriod === 'annual' ? 'Get Premium — $39.99/yr' : 'Get Premium — $4.99/mo'}
+              {billingPeriod === 'annual' ? 'Start Annual Premium' : 'Start Monthly Premium'}
             </button>
-            {billingPeriod === 'annual' && (
-              <p className="pricing-saving">You save $19.89 vs monthly</p>
-            )}
+            <p className="pricing-guarantee">30-day money-back guarantee</p>
           </div>
         </div>
       </section>
@@ -269,10 +277,10 @@ export default function Landing({ onLogin, onSignup }) {
       {/* ── Final CTA ── */}
       <section className="final-cta">
         <span className="final-cta-icon">🕊️</span>
-        <h2>Ready to carry less?</h2>
-        <p>Join thousands of people finding peace through honest reflection and compassionate guidance.</p>
-        <button className="btn-hero-primary" onClick={onSignup}>Start for free today</button>
-        <p className="final-note">No credit card required · Cancel anytime</p>
+        <h2>Ready to find peace?</h2>
+        <p>Start your journey today. Get personalized AI guidance, track your progress, and watch your burden lift.</p>
+        <button className="btn-hero-primary" onClick={onSignup}>Get Started Free (7-Day Premium Trial)</button>
+        <p className="final-note">No credit card · Cancel anytime · 30-day refund guarantee</p>
       </section>
 
       {/* ── Footer ── */}

@@ -857,21 +857,21 @@ html, body, #root {
 .preview-affirmation { background: linear-gradient(135deg, rgba(139,111,255,0.08), rgba(212,175,55,0.05)); border: 1px solid rgba(139,111,255,0.15); border-radius: 8px; padding: 10px 12px; }
 .preview-affirmation p { font-size: 13px; color: #c8b8ff; margin: 0; }
 
-/* ── Social Proof ── */
-.social-proof {
-  padding: 32px 24px;
+/* ── Trust Section ── */
+.trust-section {
+  padding: 60px 24px;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  background: var(--bg-card);
+  background: radial-gradient(ellipse at 50% 0%, rgba(139,111,255,0.08) 0%, transparent 70%), var(--bg-card);
 }
-.proof-stats {
-  display: flex; align-items: center; justify-content: center;
-  gap: 40px; flex-wrap: wrap;
+.trust-container {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 32px; max-width: 900px; margin: 0 auto;
 }
-.proof-stat { text-align: center; }
-.proof-number { display: block; font-size: 28px; font-weight: 800; color: var(--text); }
-.proof-label { font-size: 13px; color: var(--text-muted); }
-.proof-divider { width: 1px; height: 40px; background: var(--border); }
+.trust-item { text-align: center; }
+.trust-icon { font-size: 36px; display: block; margin-bottom: 12px; }
+.trust-item h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.trust-item p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0; }
 
 /* ── Sections ── */
 .section-label {
@@ -935,7 +935,8 @@ html, body, #root {
   font-size: 14px; color: var(--text); line-height: 1.7;
   font-style: italic; margin-bottom: 16px;
 }
-.testimonial-author { display: flex; flex-direction: column; gap: 2px; }
+.testimonial-rating { font-size: 18px; color: var(--gold-light); margin-bottom: 12px; letter-spacing: 1px; }
+.testimonial-author { display: flex; flex-direction: column; gap: 2px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
 .testimonial-name { font-size: 14px; font-weight: 700; }
 .testimonial-role { font-size: 12px; color: var(--text-muted); }
 
@@ -1001,7 +1002,9 @@ html, body, #root {
   cursor: pointer; transition: opacity var(--transition), transform var(--transition);
 }
 .pricing-btn-premium:hover { opacity: 0.9; transform: translateY(-1px); }
-.pricing-saving { font-size: 12px; color: var(--success); text-align: center; margin-top: 8px; }
+.pricing-subtext { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 4px; }
+.pricing-saving { font-size: 12px; color: var(--gold); font-weight: 600; text-align: center; margin-top: 8px; }
+.pricing-guarantee { font-size: 11px; color: var(--success); text-align: center; margin-top: 12px; font-weight: 600; }
 
 /* ── FAQ ── */
 .faq-list { max-width: 640px; display: flex; flex-direction: column; gap: 8px; }
