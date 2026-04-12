@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../App.jsx'
 
-export default function Signup({ onSwitch }) {
+export default function Signup({ onSwitch, onBack }) {
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,6 +45,7 @@ export default function Signup({ onSwitch }) {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        {onBack && <button className="auth-back-btn" onClick={onBack}>← Back</button>}
         <div className="auth-header">
           <span className="logo-icon">🕊️</span>
           <h1>Absolved</h1>

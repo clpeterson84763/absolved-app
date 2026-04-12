@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react'
+import Landing from './pages/Landing.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import Dashboard from './pages/Dashboard.jsx'
@@ -13,7 +14,7 @@ export function useAuth() {
 export default function App() {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
-  const [page, setPage] = useState('login')
+  const [page, setPage] = useState('landing')
   const [loading, setLoading] = useState(true)
   const [upgradeSuccess, setUpgradeSuccess] = useState(false)
 
@@ -54,7 +55,7 @@ export default function App() {
     localStorage.removeItem('absolved_user')
     setToken(null)
     setUser(null)
-    setPage('login')
+    setPage('landing')
   }
 
   async function apiFetch(path, options = {}) {
@@ -94,8 +95,9 @@ export default function App() {
         )}
         {!user ? (
           <>
-            {page === 'login' && <Login onSwitch={() => setPage('signup')} />}
-            {page === 'signup' && <Signup onSwitch={() => setPage('login')} />}
+            {page === 'landing' && <Landing onLogin={() => setPage('login')} onSignup={() => setPage('signup')} />}
+            {page === 'login' && <Login onSwitch={() => setPage('signup')} onBack={() => setPage('landing')} />}
+            {page === 'signup' && <Signup onSwitch={() => setPage('login')} onBack={() => setPage('landing')} />}
           </>
         ) : (
           <>
