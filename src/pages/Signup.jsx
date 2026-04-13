@@ -108,6 +108,12 @@ export default function Signup({ onSwitch, onBack }) {
             Sign in
           </button>
         </p>
+
+        <div className="auth-footer-links">
+          <button className="link-btn" onClick={onBack}>
+            View pricing & plans
+          </button>
+        </div>
       </div>
     </div>
   )

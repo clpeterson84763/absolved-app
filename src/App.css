@@ -226,6 +226,12 @@ html, body, #root {
   color: var(--text-muted); margin-top: 20px;
 }
 
+.auth-footer-links {
+  text-align: center; font-size: 12px;
+  color: var(--text-dim); margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
 /* ── Nav ── */
 .top-nav {
   display: flex; align-items: center; justify-content: space-between;

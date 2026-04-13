@@ -84,6 +84,12 @@ export default function Login({ onSwitch, onBack }) {
             Sign up free
           </button>
         </p>
+
+        <div className="auth-footer-links">
+          <button className="link-btn" onClick={onBack}>
+            View pricing & plans
+          </button>
+        </div>
       </div>
     </div>
   )
