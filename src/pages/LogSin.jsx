@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../App.jsx'
 import AtonePrompt from '../components/AtonePrompt.jsx'
+import DoveAnimation from '../components/DoveAnimation.jsx'
 
 async function redirectToCheckout(apiFetch, plan = 'monthly') {
   const res = await apiFetch('/api/stripe/create-checkout-session', {
@@ -131,6 +132,7 @@ export default function LogSin({ onBack }) {
   if (result) {
     return (
       <div className="page">
+        <DoveAnimation />
         <nav className="top-nav">
           <button className="back-btn" onClick={onBack}>← Dashboard</button>
           <span className="nav-title">Atonement Guidance</span>
