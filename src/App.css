@@ -320,7 +320,39 @@ html, body, #root {
 .back-btn:hover { background: var(--bg-elevated); color: var(--text); }
 
 /* ── Page ── */
-.page { min-height: 100vh; display: flex; flex-direction: column; }
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Dove Corner Decorations ── */
+.dove-corner {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  z-index: 1;
+  pointer-events: none;
+  color: var(--accent);
+}
+
+.dove-corner-top-left {
+  top: 20px;
+  left: 20px;
+}
+
+.dove-corner-bottom-right {
+  bottom: 20px;
+  right: 20px;
+  transform: scaleX(-1) scaleY(-1);
+}
+
+.dove-corner svg {
+  width: 100%;
+  height: 100%;
+}
 
 /* ── Usage Banner ── */
 .usage-banner {
@@ -432,11 +464,15 @@ html, body, #root {
 .delete-btn:hover { background: var(--error-bg); }
 
 .premium-feature-hint {
-  margin-top: 8px; padding: 10px 14px;
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 14px;
   background: rgba(212,175,55,0.08);
   border: 1px solid rgba(212,175,55,0.2);
   border-radius: 7px;
-  color: var(--gold-light); font-size: 13px;
+  color: var(--gold-light);
+  font-size: 13px;
   text-align: center;
   margin-bottom: 0;
   cursor: pointer;

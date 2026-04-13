@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../App.jsx'
+import DoveCorners from '../components/DoveCorners.jsx'
 
 export default function Signup({ onSwitch, onBack }) {
   const { login } = useAuth()
@@ -46,6 +47,7 @@ export default function Signup({ onSwitch, onBack }) {
 
   return (
     <div className="auth-page">
+      <DoveCorners position="both" />
       <div className="auth-card">
         {onBack && <button className="auth-back-btn" onClick={onBack}>← Back</button>}
         <div className="auth-header">

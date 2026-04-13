@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../App.jsx'
 import AtonePrompt from '../components/AtonePrompt.jsx'
 import DoveAnimation from '../components/DoveAnimation.jsx'
+import DoveCorners from '../components/DoveCorners.jsx'
 
 async function redirectToCheckout(apiFetch, plan = 'monthly') {
   const res = await apiFetch('/api/stripe/create-checkout-session', {
@@ -73,6 +74,7 @@ export default function LogSin({ onBack }) {
   if (limitReached) {
     return (
       <div className="page">
+        <DoveCorners position="both" />
         <nav className="top-nav">
           <button className="back-btn" onClick={onBack}>← Back</button>
           <span className="nav-title">Log a Sin</span>
@@ -132,6 +134,7 @@ export default function LogSin({ onBack }) {
   if (result) {
     return (
       <div className="page">
+        <DoveCorners position="both" />
         <DoveAnimation />
         <nav className="top-nav">
           <button className="back-btn" onClick={onBack}>← Dashboard</button>
@@ -152,6 +155,7 @@ export default function LogSin({ onBack }) {
 
   return (
     <div className="page">
+      <DoveCorners position="both" />
       <nav className="top-nav">
         <button className="back-btn" onClick={onBack}>← Back</button>
         <span className="nav-title">Log a Sin</span>

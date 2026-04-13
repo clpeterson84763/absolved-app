@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../App.jsx'
 import AtonePrompt from '../components/AtonePrompt.jsx'
 import SinStats from '../components/SinStats.jsx'
+import DoveCorners from '../components/DoveCorners.jsx'
 
 const CATEGORY_LABELS = {
   general: '✦ General', anger: '🔥 Anger', envy: '💚 Envy',
@@ -126,6 +127,7 @@ export default function Dashboard({ onLogNew, justUpgraded }) {
 
   return (
     <div className="page dashboard">
+      <DoveCorners position="both" />
       <nav className="top-nav">
         <div className="nav-brand">
           <span>🕊️</span>

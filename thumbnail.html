@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin: 0; padding: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; }
+  .thumb {
+    width: 240px; height: 240px;
+    background: linear-gradient(135deg, #1a1030 0%, #0d0f14 40%, #1a0f2e 100%);
+    border-radius: 48px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(139,111,255,0.3);
+  }
+  .thumb::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 30%, rgba(139,111,255,0.15) 0%, transparent 60%);
+  }
+  .dove { font-size: 64px; margin-bottom: 8px; position: relative; z-index: 1; }
+  .name {
+    font-size: 28px; font-weight: 800; letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #e8e0ff, #8b6fff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    position: relative; z-index: 1;
+  }
+  .tagline {
+    font-size: 11px; color: rgba(200,184,255,0.6); margin-top: 4px;
+    letter-spacing: 0.5px; position: relative; z-index: 1;
+  }
+</style>
+</head>
+<body>
+  <div class="thumb">
+    <div class="dove">&#x1F54A;&#xFE0F;</div>
+    <div class="name">Absolved</div>
+    <div class="tagline">Carry Less. Live Better.</div>
+  </div>
+</body>
+</html>

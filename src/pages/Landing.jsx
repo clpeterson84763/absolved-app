@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import DoveCorners from '../components/DoveCorners.jsx'
 
 const FAQS = [
   {
@@ -41,6 +42,7 @@ export default function Landing({ onLogin, onSignup }) {
 
   return (
     <div className="landing">
+      <DoveCorners position="both" />
 
       {/* ── Nav ── */}
       <nav className="landing-nav">
