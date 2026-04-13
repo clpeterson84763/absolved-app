@@ -43,9 +43,6 @@ router.post('/create-checkout-session', requireAuth, async (req, res) => {
   const plan = req.body?.plan === 'annual' ? 'annual' : 'monthly'
 
   try {
-    const key = process.env.STRIPE_SECRET_KEY
-    console.log('[Stripe] Key:', key ? `${key.substring(0, 12)}...` : 'MISSING')
-
     const user = db.prepare('SELECT id, email, is_premium, stripe_customer_id FROM users WHERE id = ?').get(req.userId)
     if (!user) return res.status(404).json({ error: 'User not found' })
     if (user.is_premium) return res.status(400).json({ error: 'Already a premium member' })
@@ -54,19 +51,15 @@ router.post('/create-checkout-session', requireAuth, async (req, res) => {
       ? process.env.STRIPE_ANNUAL_PRICE_ID
       : process.env.STRIPE_PRICE_ID
 
-    console.log('[Stripe] Plan:', plan, '| Price ID:', priceId || 'MISSING')
-
     if (!priceId) {
       return res.status(500).json({ error: `Price ID for ${plan} plan not configured` })
     }
 
     const frontendUrl = process.env.FRONTEND_URL || 'https://absolved.it.com'
-    console.log('[Stripe] Frontend URL:', frontendUrl)
 
     // Create or reuse Stripe customer
     let customerId = user.stripe_customer_id
     if (!customerId) {
-      console.log('[Stripe] Creating customer for:', user.email)
       const customer = await stripePost('customers', {
         email: user.email,
         'metadata[userId]': String(user.id),
@@ -77,7 +70,6 @@ router.post('/create-checkout-session', requireAuth, async (req, res) => {
       }
       customerId = customer.id
       db.prepare('UPDATE users SET stripe_customer_id = ? WHERE id = ?').run(customerId, user.id)
-      console.log('[Stripe] Customer created:', customerId)
     }
 
     // Create checkout session
@@ -98,7 +90,6 @@ router.post('/create-checkout-session', requireAuth, async (req, res) => {
       return res.status(500).json({ error: `Stripe error: ${session.error.message}` })
     }
 
-    console.log('[Stripe] Session created:', session.id)
     res.json({ url: session.url })
 
   } catch (err) {
