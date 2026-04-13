@@ -37,8 +37,9 @@ export default function Dashboard({ onLogNew, justUpgraded }) {
       })
       const data = await res.json()
       if (data.url) window.location.href = data.url
-    } catch {
-      setError('Failed to start checkout')
+      else setError(data.error || 'Failed to start checkout')
+    } catch (err) {
+      setError(err.message || 'Failed to start checkout')
     } finally {
       setCheckoutLoading(false)
     }

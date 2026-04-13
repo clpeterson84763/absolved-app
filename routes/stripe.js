@@ -55,7 +55,7 @@ router.post('/create-checkout-session', requireAuth, async (req, res) => {
     res.json({ url: session.url })
   } catch (err) {
     console.error('[Stripe] Checkout session error:', err.message)
-    res.status(500).json({ error: 'Failed to create checkout session' })
+    res.status(500).json({ error: `Stripe error: ${err.message}` })
   }
 })
 
