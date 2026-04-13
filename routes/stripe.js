@@ -6,7 +6,11 @@ import db from '../db.js'
 const router = Router()
 
 function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY)
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    maxNetworkRetries: 0,
+    timeout: 30000,
+    httpAgent: undefined,
+  })
 }
 
 // POST /api/stripe/create-checkout-session
@@ -15,6 +19,8 @@ router.post('/create-checkout-session', requireAuth, async (req, res) => {
   const plan = req.body?.plan === 'annual' ? 'annual' : 'monthly'
 
   try {
+    const key = process.env.STRIPE_SECRET_KEY
+    console.log('[Stripe] Key loaded:', key ? `${key.substring(0, 12)}...` : 'MISSING')
     const stripe = getStripe()
     const user = db.prepare('SELECT id, email, is_premium, stripe_customer_id FROM users WHERE id = ?').get(req.userId)
     if (!user) return res.status(404).json({ error: 'User not found' })
