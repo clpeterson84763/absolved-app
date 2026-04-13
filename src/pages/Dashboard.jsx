@@ -245,13 +245,20 @@ export default function Dashboard({ onLogNew, justUpgraded }) {
                       </button>
                     )}
 
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(sin.id)}
-                      disabled={deletingId === sin.id}
-                    >
-                      {deletingId === sin.id ? 'Removing...' : 'Remove entry'}
-                    </button>
+                    {usage?.is_premium && (
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDelete(sin.id)}
+                        disabled={deletingId === sin.id}
+                      >
+                        {deletingId === sin.id ? 'Removing...' : 'Remove entry'}
+                      </button>
+                    )}
+                    {!usage?.is_premium && (
+                      <p className="premium-feature-hint">
+                        💎 Delete is available for Premium members
+                      </p>
+                    )}
                   </div>
                 )}
               </div>

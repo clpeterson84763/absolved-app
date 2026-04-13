@@ -171,6 +171,20 @@ router.delete('/:id', requireAuth, (req, res) => {
   }
 
   try {
+    // Check if user is premium
+    const user = db.prepare('SELECT is_premium FROM users WHERE id = ?').get(req.userId)
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    // Block delete for free tier users
+    if (!user.is_premium) {
+      return res.status(403).json({
+        error: 'Delete is only available for Premium subscribers',
+        code: 'PREMIUM_ONLY',
+      })
+    }
+
     const sin = db.prepare('SELECT id FROM sins WHERE id = ? AND user_id = ?').get(id, req.userId)
     if (!sin) {
       return res.status(404).json({ error: 'Sin not found' })
