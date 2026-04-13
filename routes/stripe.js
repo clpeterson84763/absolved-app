@@ -9,7 +9,6 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY, {
     maxNetworkRetries: 0,
     timeout: 30000,
-    httpAgent: undefined,
   })
 }
 
