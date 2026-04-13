@@ -255,9 +255,13 @@ export default function Dashboard({ onLogNew, justUpgraded }) {
                       </button>
                     )}
                     {!usage?.is_premium && (
-                      <p className="premium-feature-hint">
-                        💎 Delete is available for Premium members
-                      </p>
+                      <button
+                        className="premium-feature-hint"
+                        onClick={() => handleUpgrade('annual')}
+                        disabled={checkoutLoading}
+                      >
+                        💎 Delete is available for Premium members — Upgrade now
+                      </button>
                     )}
                   </div>
                 )}
