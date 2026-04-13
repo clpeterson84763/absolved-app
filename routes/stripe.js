@@ -5,22 +5,47 @@ import db from '../db.js'
 
 const router = Router()
 
-function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY, {
-    maxNetworkRetries: 0,
-    timeout: 30000,
+const STRIPE_API = 'https://api.stripe.com/v1'
+
+// Native fetch helper for Stripe API calls — bypasses SDK connection issues
+async function stripePost(endpoint, data) {
+  const key = process.env.STRIPE_SECRET_KEY
+  const params = new URLSearchParams()
+
+  function encode(obj, prefix = '') {
+    for (const [k, v] of Object.entries(obj)) {
+      if (v === null || v === undefined) continue
+      const field = prefix ? `${prefix}[${k}]` : k
+      if (typeof v === 'object' && !Array.isArray(v)) {
+        encode(v, field)
+      } else {
+        params.append(field, String(v))
+      }
+    }
+  }
+
+  encode(data)
+
+  const res = await fetch(`${STRIPE_API}/${endpoint}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: params.toString(),
   })
+
+  return res.json()
 }
 
 // POST /api/stripe/create-checkout-session
-// Body: { plan: 'monthly' | 'annual' }
 router.post('/create-checkout-session', requireAuth, async (req, res) => {
   const plan = req.body?.plan === 'annual' ? 'annual' : 'monthly'
 
   try {
     const key = process.env.STRIPE_SECRET_KEY
-    console.log('[Stripe] Key loaded:', key ? `${key.substring(0, 12)}...` : 'MISSING')
-    const stripe = getStripe()
+    console.log('[Stripe] Key:', key ? `${key.substring(0, 12)}...` : 'MISSING')
+
     const user = db.prepare('SELECT id, email, is_premium, stripe_customer_id FROM users WHERE id = ?').get(req.userId)
     if (!user) return res.status(404).json({ error: 'User not found' })
     if (user.is_premium) return res.status(400).json({ error: 'Already a premium member' })
@@ -29,37 +54,55 @@ router.post('/create-checkout-session', requireAuth, async (req, res) => {
       ? process.env.STRIPE_ANNUAL_PRICE_ID
       : process.env.STRIPE_PRICE_ID
 
+    console.log('[Stripe] Plan:', plan, '| Price ID:', priceId || 'MISSING')
+
     if (!priceId) {
       return res.status(500).json({ error: `Price ID for ${plan} plan not configured` })
     }
 
+    const frontendUrl = process.env.FRONTEND_URL || 'https://absolved.it.com'
+    console.log('[Stripe] Frontend URL:', frontendUrl)
+
     // Create or reuse Stripe customer
     let customerId = user.stripe_customer_id
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      console.log('[Stripe] Creating customer for:', user.email)
+      const customer = await stripePost('customers', {
         email: user.email,
-        metadata: { userId: String(user.id) },
+        'metadata[userId]': String(user.id),
       })
+      if (customer.error) {
+        console.error('[Stripe] Customer creation error:', customer.error.message)
+        return res.status(500).json({ error: `Stripe error: ${customer.error.message}` })
+      }
       customerId = customer.id
       db.prepare('UPDATE users SET stripe_customer_id = ? WHERE id = ?').run(customerId, user.id)
+      console.log('[Stripe] Customer created:', customerId)
     }
 
-    const session = await stripe.checkout.sessions.create({
+    // Create checkout session
+    const session = await stripePost('checkout/sessions', {
       customer: customerId,
-      payment_method_types: ['card'],
+      'payment_method_types[0]': 'card',
       mode: 'subscription',
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/?upgraded=true`,
-      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/?upgraded=false`,
-      metadata: { userId: String(user.id) },
-      subscription_data: {
-        metadata: { userId: String(user.id) },
-      },
+      'line_items[0][price]': priceId,
+      'line_items[0][quantity]': '1',
+      success_url: `${frontendUrl}/?upgraded=true`,
+      cancel_url: `${frontendUrl}/?upgraded=false`,
+      'metadata[userId]': String(user.id),
+      'subscription_data[metadata][userId]': String(user.id),
     })
 
+    if (session.error) {
+      console.error('[Stripe] Session creation error:', session.error.message)
+      return res.status(500).json({ error: `Stripe error: ${session.error.message}` })
+    }
+
+    console.log('[Stripe] Session created:', session.id)
     res.json({ url: session.url })
+
   } catch (err) {
-    console.error('[Stripe] Checkout session error:', err.message)
+    console.error('[Stripe] Checkout error:', err.message)
     res.status(500).json({ error: `Stripe error: ${err.message}` })
   }
 })
@@ -71,7 +114,7 @@ router.post('/webhook', async (req, res) => {
 
   let event
   try {
-    const stripe = getStripe()
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret)
   } catch (err) {
     console.error('[Stripe] Webhook signature failed:', err.message)
@@ -113,14 +156,14 @@ router.post('/webhook', async (req, res) => {
 // GET /api/stripe/portal
 router.get('/portal', requireAuth, async (req, res) => {
   try {
-    const stripe = getStripe()
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
     const user = db.prepare('SELECT stripe_customer_id FROM users WHERE id = ?').get(req.userId)
     if (!user?.stripe_customer_id) {
       return res.status(400).json({ error: 'No billing account found' })
     }
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripe_customer_id,
-      return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/`,
+      return_url: `${process.env.FRONTEND_URL || 'https://absolved.it.com'}/`,
     })
     res.json({ url: session.url })
   } catch (err) {
